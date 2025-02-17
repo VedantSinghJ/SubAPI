@@ -3,6 +3,8 @@ import User from '../models/user.model.js'
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+import { JWT_SECRET,JWT_EXPIRES_IN } from '../config/env.js';
+
 // What is a req body ? ->  req.body is an object containing data from the client (POST request)
 
 export const signUp = async (req,res,next)=>{
@@ -12,7 +14,7 @@ export const signUp = async (req,res,next)=>{
 
     try {
         //Sign up logic
-        const {name,email,pasword} = req.body;
+        const {name,email,password} = req.body;
 
         // Check if a user already exits
         const existingUser = await User.findOne({email});
@@ -31,7 +33,7 @@ export const signUp = async (req,res,next)=>{
 
         const newUser = await User.create([{name,email,password:hashedPassword}],{session});
 
-        const token = jwt.sign({userId: newUser[0]._id},JWT_SECRET,{expiresIn:JWT_EXPIRES_IND})
+        const token = jwt.sign({userId: newUser[0]._id},JWT_SECRET,{expiresIn:JWT_EXPIRES_IN})
 
         await session.commitTransaction();
         session.endSession();
@@ -42,7 +44,7 @@ export const signUp = async (req,res,next)=>{
             message: 'User created successfully',
             data: {
                 token,
-                user: newUsers[0]
+                user: newUser[0]
             }
         })
         
