@@ -8,6 +8,8 @@ import authRouter from './routes/auth.routes.js';
 import subscriptionRouter from './routes/subscription.routes.js';
 import connectToDatabase from './Database/mongodb.js';
 import errorMiddleware from './middlewares/error.middleware.js';
+import arcjetMiddleware from './middlewares/arcjet.middleware.js';
+
 
 
 const app = express();
@@ -15,6 +17,8 @@ const app = express();
 app.use(express.json()); // APIs receiving JSON data in req.body.
 app.use(express.urlencoded({extended: false})); //Used for: Handling form submissions (application/x-www-form-urlencoded). ( Parses URL-encoded form data.)
 app.use(cookieParser()) //read cookies to store user data
+
+app.use(arcjetMiddleware); 
 
 //Routes to use
 
